@@ -66,12 +66,12 @@
     <Import Include="System.Data" />
     <Import Include="System.Diagnostics" />
     <Import Include="System.Linq" />
-    <Import Include="System.Xml.Linq" />
-    <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Board.vb" />
     <Compile Include="Game.vb" />
+    <Compile Include="GameAction.vb" />
+    <Compile Include="Guard.vb" />
     <Compile Include="Midi.vb" />
     <Compile Include="MidiHeader.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -90,6 +90,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Note.vb" />
+    <Compile Include="Point.vb" />
     <Compile Include="Sound.vb" />
     <Compile Include="Track.vb" />
   </ItemGroup>

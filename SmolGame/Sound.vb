@@ -1,19 +1,26 @@
 ﻿Public Class Sound
-    Shared Thread As Threading.Thread
-    Shared Timescale As Double = 1
+    Shared Timescale As Double = 0.3
+    Shared FrequencyOffset As Integer = 10
+    Shared Worker As ComponentModel.BackgroundWorker
     Public Shared Json As New Web.Script.Serialization.JavaScriptSerializer()
 
-    Shared Sub Play(notes As List(Of Note), loopMusic As Boolean)
+    Shared Sub Play(notes As List(Of Note), loopMusic As Boolean, Optional worker As ComponentModel.BackgroundWorker = Nothing)
+        Sound.Worker = worker
         While True
             Dim i As Integer = 0
             For Each note In notes
-                Console.Beep(27.5 * (2 ^ ((note.Midi - 21) / 12)), note.Duration * 1000 * Timescale)
+                Console.Beep((27.5 * (2 ^ ((note.Midi - 21) / 12))) + FrequencyOffset, note.Duration * 1000 * Timescale)
                 If i + 1 < notes.Count Then
                     If Not notes(i + 1).Time = note.Time Then
                         Threading.Thread.Sleep((notes(i + 1).Time - note.Time) * 1000 * Timescale)
                     End If
                 End If
                 i += 1
+                If worker IsNot Nothing Then
+                    If worker.CancellationPending Then
+                        Exit Sub
+                    End If
+                End If
             Next
             If Not loopMusic Then
                 Exit Sub
@@ -37,7 +44,9 @@
     End Sub
 
     Private Shared Sub SpawnMidiThread(data As List(Of Note))
-        Dim bkgWork As New ComponentModel.BackgroundWorker
+        Dim bkgWork As New ComponentModel.BackgroundWorker With {
+            .WorkerSupportsCancellation = True
+        }
         AddHandler bkgWork.DoWork, AddressOf MidiThread
         bkgWork.RunWorkerAsync(data)
     End Sub
