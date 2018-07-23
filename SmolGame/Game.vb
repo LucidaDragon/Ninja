@@ -6,14 +6,16 @@
     Sub Main()
         Console.Title = "Ninja - Floppy Jam 2018"
         PrintTitle()
-        Console.WriteLine("Play Music? (y/n)")
-        Dim key As ConsoleKey = ConsoleKey.NoName
-        While Not (key = ConsoleKey.Y Or key = ConsoleKey.N)
-            Console.SetCursorPosition(0, 12)
-            key = Console.ReadKey().Key
-        End While
-        If key = ConsoleKey.Y Then
-            LoadMusic()
+        If IO.File.Exists("music.json") Then
+            Console.WriteLine("Play Music? (y/n)")
+            Dim key As ConsoleKey = ConsoleKey.NoName
+            While Not (key = ConsoleKey.Y Or key = ConsoleKey.N)
+                Console.SetCursorPosition(0, 12)
+                key = Console.ReadKey().Key
+            End While
+            If key = ConsoleKey.Y Then
+                LoadMusic()
+            End If
         End If
         While True
             GameLoop()
@@ -32,10 +34,10 @@
                 PlayerBoard.DoInput(GetInput())
                 PlayerBoard.Tick()
             End While
-            If PlayerBoard.Finished And PlayerBoard.Level <= 0 Then
+            If PlayerBoard.Finished And PlayerBoard.Level <= 10 Then
                 PrintTitle()
                 PlayerBoard = New Board(PlayerBoard.Width, PlayerBoard.Height, PlayerBoard.Level + 1)
-            ElseIf PlayerBoard.Finished And PlayerBoard.Level > 0 Then
+            ElseIf PlayerBoard.Finished And PlayerBoard.Level > 10 Then
                 Threading.Thread.Sleep(500)
                 WipeScreen()
                 Console.Clear()
@@ -66,8 +68,8 @@
                         End If
                     Next
                 Next
-                Console.SetCursorPosition(0, ViewportHeight)
                 Threading.Thread.Sleep(1000)
+                Console.SetCursorPosition(0, ViewportHeight)
                 While Console.KeyAvailable
                     Console.ReadKey()
                 End While
