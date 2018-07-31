@@ -152,11 +152,15 @@
         For i As Integer = 0 To pnts.Count - 1
             Console.SetCursorPosition(pnts(i).X, pnts(i).Y)
             Console.Write(" ")
+            If i Mod (pnts.Count - 1) \ 10 = 0 Then
+                Console.Beep((((pnts.Count - 1) - i) / (pnts.Count - 1)) * 100 + 100, 100)
+            End If
         Next
     End Sub
 
     Sub LoadMusic()
         If IO.File.Exists("music.json") Then
+            Sound.UsingMusic = True
             Sound.PlayLoopedMidi("music.json")
         End If
     End Sub

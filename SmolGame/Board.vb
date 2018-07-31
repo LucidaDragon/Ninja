@@ -191,21 +191,34 @@ Public Class Board
         ElseIf action = GameAction.Up Then
             If Me(NinjaX, NinjaY - 1) Then
                 NinjaY -= 1
+                Sound.Beep(300, 100)
+            Else
+                Sound.Beep(200, 100)
             End If
         ElseIf action = GameAction.Down Then
             If Me(NinjaX, NinjaY + 1) Then
                 NinjaY += 1
+                Sound.Beep(300, 100)
+            Else
+                Sound.Beep(200, 100)
             End If
         ElseIf action = GameAction.Left Then
             If Me(NinjaX - 1, NinjaY) Then
                 NinjaX -= 1
+                Sound.Beep(300, 100)
+            Else
+                Sound.Beep(200, 100)
             End If
         ElseIf action = GameAction.Right Then
             If Me(NinjaX + 1, NinjaY) Then
                 NinjaX += 1
+                Sound.Beep(300, 100)
+            Else
+                Sound.Beep(200, 100)
             End If
         ElseIf action = GameAction.Bomb Then
             If HasBomb Then
+                Console.Beep(250, 100)
                 For i As Integer = NinjaX - 3 To NinjaX + 3
                     For j As Integer = NinjaY - 3 To NinjaY + 3
                         If i > 0 And j > 0 And i < Width - 1 And j < Height - 1 And Me(i, j) = False Then
@@ -215,7 +228,13 @@ Public Class Board
                         End If
                     Next
                 Next
+                For i As Integer = 275 To 250 Step -5
+                    Sound.Beep(i, 100)
+                    Threading.Thread.Sleep(10)
+                Next
                 HasBomb = False
+            Else
+                Sound.Beep(200, 100)
             End If
         End If
         Console.SetCursorPosition(NinjaX, NinjaY + 12)

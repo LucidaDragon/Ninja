@@ -2,6 +2,8 @@
     Shared Timescale As Double = 0.3
     Shared FrequencyOffset As Integer = 10
     Shared Worker As ComponentModel.BackgroundWorker
+    Shared CurrentBeepThread As Threading.Thread
+    Public Shared UsingMusic As Boolean = False
     Public Shared Json As New Web.Script.Serialization.JavaScriptSerializer()
 
     Shared Sub Play(notes As List(Of Note), loopMusic As Boolean, Optional worker As ComponentModel.BackgroundWorker = Nothing)
@@ -41,6 +43,19 @@
 
     Shared Sub PlayLoopedMidi(file As String)
         SpawnMidiThread(ReadMidi(file).First)
+    End Sub
+
+    Shared Sub Beep(frequency As Integer, duration As Integer)
+        If Not UsingMusic Then
+            Dim thread As New Threading.Thread(New Threading.ParameterizedThreadStart(Sub(arg As Point)
+                                                                                          Console.Beep(arg.X, arg.Y)
+                                                                                      End Sub))
+            If CurrentBeepThread IsNot Nothing Then
+                CurrentBeepThread.Abort()
+            End If
+            CurrentBeepThread = thread
+            thread.Start(New Point(frequency, duration))
+        End If
     End Sub
 
     Private Shared Sub SpawnMidiThread(data As List(Of Note))
